@@ -1,0 +1,56 @@
+name: anythingllm
+
+networks:
+  anything-llm:
+    driver: bridge
+
+services:
+  anything-llm:
+    container_name: anythingllm
+    build:
+      context: ../.
+      dockerfile: ./docker/Dockerfile
+      args:
+        ARG_UID: ${UID:-1000}
+        ARG_GID: ${GID:-1000}
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - "./.env:/app/server/.env"
+      - "../server/storage:/app/server/storage"
+      - "../collector/hotdir/:/app/collector/hotdir"
+      - "../collector/outputs/:/app/collector/outputs"
+    user: "${UID:-1000}:${GID:-1000}"
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env
+    networks:
+      - anything-llm
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  mock-ai:
+    profiles: ["assessment"]
+    build:
+      context: ../extras/assessment-mocks
+    environment:
+      MOCK_SERVICE: ai
+      MOCK_AI_MODE: ${MOCK_AI_MODE:-normal}
+    ports:
+      - "4000:4000"
+    networks:
+      - anything-llm
+
+  mock-enterprise:
+    profiles: ["assessment"]
+    build:
+      context: ../extras/assessment-mocks
+    environment:
+      MOCK_SERVICE: enterprise
+      MOCK_ENTERPRISE_MODE: ${MOCK_ENTERPRISE_MODE:-normal}
+      MOCK_ENTERPRISE_DELAY_MS: ${MOCK_ENTERPRISE_DELAY_MS:-0}
+    ports:
+      - "4001:4001"
+    networks:
+      - anything-llm

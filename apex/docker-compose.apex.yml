@@ -1,0 +1,17 @@
+# Adds the mock enterprise system next to AnythingLLM.
+# Run from the repo root:
+#   docker compose -f docker/docker-compose.yml -f apex/docker-compose.apex.yml up --build -d
+# Variables (APEX_*) are read from docker/.env — see apex/apex.env.example.
+services:
+  enterprise-mock:
+    build:
+      context: ../apex/mock-services/enterprise-api
+    container_name: apex-enterprise-mock
+    environment:
+      MOCK_API_KEY: ${APEX_ENTERPRISE_API_KEY:?Set APEX_ENTERPRISE_API_KEY in docker/.env}
+      MOCK_ENABLE_ADMIN: "true"   # demo only: enables the /__admin fault-injection endpoints
+    ports:
+      - "4010:4010"
+    networks:
+      - anything-llm
+    restart: unless-stopped

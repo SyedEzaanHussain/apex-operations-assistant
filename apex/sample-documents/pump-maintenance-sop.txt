@@ -1,0 +1,7 @@
+Pump Maintenance Procedure (synthetic sample)
+
+Before any pump repair, isolate electrical power and apply lockout tagout. Confirm zero energy with the site electrician before opening the casing.
+
+Routine pump maintenance must be scheduled during the weekly maintenance window on Tuesday between 06:00 and 08:00. Emergency repairs may be done outside the window with supervisor approval.
+
+After repair, record the work order number, parts replaced, and the technician name in the maintenance register.
